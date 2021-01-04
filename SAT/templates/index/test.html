@@ -1,0 +1,17 @@
+{% extends 'SATbase.html' %}
+{% load static %}
+
+{% block head %}
+<title>Test {{ test.id }}</title>
+{% endblock %}
+
+{% block body %}
+<div class="jumbotron" style="background-image: url(https://techcrunch.com/wp-content/uploads/2015/08/clouds.jpg); background-size: 100%;">
+  <h1>SAT Practice Test {{ test.id }}</h1>
+</div>
+
+{% for section in sections %}
+    <h3><a href=" {% url 'SAT:Section' test.id section.id %}">{{ section }}</a></h3>
+{% endfor %}
+
+{% endblock %}

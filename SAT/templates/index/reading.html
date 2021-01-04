@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block head %}
-<title>Test 2</title>
+<title>Test {{ section.test.id }}</title>
 {% endblock %}
 
 {% block body %}
@@ -22,7 +22,7 @@
             and in any accompanying graphics (such as a table or graph).</h3>
 <br>
     <p><i>(When you are ready, Click the Button below to Begin)</i></p>
-    <button onclick="{% url 'SAT:Question' question.test.id question.section.id question.id' %}">Begin Test</button>
+    <button onclick="{% url 'SAT:Question' section.test.id section.id 1 %}">Begin Test</button>
 
 
 

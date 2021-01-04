@@ -99,12 +99,15 @@ p {
 no-repeat; background-size: 100%">
     <br>
 <h1>There are {{test_list.count}} Practice Tests</h1>
-    <p><b><i>(Click on a Test)</i></b></p>
+    <p><b><i>(Click on a )</i></b></p>
 
     <div class="row">
     {% for test in test_list %}
       <div class="column">
-        <h1><a href="{% url 'SAT:Test' test.id %}">Practice Test {{test.id}}</a></h1>
+        <h1>Practice Test {{test.id}}</h1>
+        {% for section in test.sections %}
+        <h3><a href=" {% url 'SAT:Section' test.id section.id %}">{{ section }}</a></h3>
+        {% endfor %}
       </div>
       {% if forloop.counter|divisibleby:3 %}
     </div>

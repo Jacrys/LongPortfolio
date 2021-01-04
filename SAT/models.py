@@ -10,6 +10,13 @@ class Test(models.Model):
     def __str__(self):
         return self.test
 
+    @property
+    def sections(self):
+        return Section.objects.all().filter(test_id = self.id)
+    
+    @property
+    def questions(self):
+        return Question.objects.all().filter(test_id = self.id)
 
 class Section(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE, default="")
@@ -17,6 +24,10 @@ class Section(models.Model):
 
     def __str__(self):
         return self.section
+
+    @property
+    def questions(self):
+        return Question.objects.all().filter(section_id = self.id)
 
 
 class Passage(models.Model):
@@ -41,6 +52,14 @@ class Question(models.Model):
 
     def __str__(self):
         return self.questions_text
+
+    @property
+    def choices(self):
+        return Choice.objects.all().filter(question_id = self.id)
+
+    @property
+    def correct_answer(self):
+        return Choice.objects.get(question_id = self.id, correct="Correct")
 
 
 class Choice(models.Model):
