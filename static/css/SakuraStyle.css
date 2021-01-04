@@ -1,3 +1,19 @@
+body {
+    padding:0;
+    margin:0;
+    overflow:hidden;
+	height: 600px;
+}
+canvas {
+    padding:0;
+    margin:0;
+}
+div.btnbg {
+    position:fixed;
+    left:0;
+    top:0;
+}
+
 h1 {
   font-size: 100px;
   text-align: center;
@@ -8,31 +24,28 @@ h1 {
 h2 {
 font-size: 100px;
   text-align: center;
-  color: white;
+  color: black;
   font-family: 'lobster';
 }
 
 p {
     text-align: center;
+    color: black;
 }
 
 .fa-linkedin {
-  background: #007bb5;
   color: white;
 }
 
 .fa-github {
-  background: #007bb5;
   color: white;
 }
 
 .fa-twitter {
-  background: #007bb5;
   color: white;
 }
 
 .fa-envelope {
-  background: #007bb5;
   color: white;
 }
 

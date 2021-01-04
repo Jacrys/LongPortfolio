@@ -1,55 +1,70 @@
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.template import loader
 from django.urls import reverse
-from .models import Question, Choice, Passage, Explanation
-from django.shortcuts import render, get_object_or_404
+from .models import Question, Choice, Test, Section
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, authenticate
+from django.views.generic import ListView
 
 
 def home(request):
     return render(request, 'index/home.html', {})
 
 
-def test1(request):
-    return render(request, 'index/test1.html', {})
-
-
-def test2(request):
-    return render(request, 'index/test2.html', {})
-
-
-def test3(request):
-    return render(request, 'index/test3.html', {})
-
-
-def test4(request):
-    return render(request, 'index/test4.html', {})
-
-
-def test5(request):
-    return render(request, 'index/test5.html', {})
-
-
-def test6(request):
-    return render(request, 'index/test6.html', {})
-
-
-def test7(request):
-    return render(request, 'index/test7.html', {})
-
-
-def test8(request):
-    return render(request, 'index/test8.html', {})
-
-
-def final(request):
-    return render(request, 'index/final.html', {})
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('http://remeolong.pythonanywhere.com/SAT/home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'index/register.html', {'form': form})
 
 
 def tips(request):
     return render(request, 'index/tips.html', {})
 
 
-def detail(request, question_id):
+class TestList(ListView):
+    model = Section
+    template_name = 'SAT/test_list.html'
+    context_object_name = 'test_list'
+
+    def get_queryset(self):
+        return Section.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(TestList, self).get_context_data(**kwargs)
+        context['TestList'] = Test.objects.all()
+        context['Question'] = Question.objects.all()
+        return context
+
+
+def reading(request, test_id, section_id, question_id):
+    test = Test.objects.get(Test, pk=test_id)
+    section = Section.objects.get(Section, pk=section_id)
+    question = Question.objects.get(Question, pk=question_id)
+    return render(request, 'index/reading.html', {'question': question})
+
+
+def writing(request, test_id, section_id):
+    return render(request, 'index/writing.html', {})
+
+
+def mathnc(request, test_id, section_id):
+    return render(request, 'index/mathnc.html', {})
+
+
+def math(request, test_id, section_id):
+    return render(request, 'index/math.html', {})
+
+
+def detail(request, test_id, section_id, question_id):
     try:
         question = Question.objects.get(pk=question_id)
     except Question.DoesNotExist:
@@ -57,7 +72,7 @@ def detail(request, question_id):
     return render(request, 'index/details.html', {'question': question})
 
 
-def result(request, question_id):
+def result(request, test_id, section_id, question_id):
     question = get_object_or_404(Question, pk=question_id)
     choice = question.choice_set.all().first()
     context = {'question': question, 'choice': choice}
@@ -71,8 +86,24 @@ def answer(request, question_id):
     except (KeyError, Choice.DoesNotExist):
         return render(request, 'index/details.html', {
             'question': question,
-            'error_message': "Please make a Valid Selection.",
+            'error_message': "A Choice was not selected. Please make a selection.",
         })
     else:
+        selected_answer.answer = selected_answer.choice_text
         selected_answer.save()
         return HttpResponseRedirect(reverse('results', args=(question.id,)))
+
+
+def final(request):
+    return render(request, 'index/final.html', {})
+
+
+
+
+
+
+
+
+
+
+
